@@ -1,0 +1,41 @@
+﻿ public void djikstra(Vertice v) {
+        
+        for (Vertice vertice : this.Lvertices) {
+            vertice.setVisitado(false); //seteo atributos del vértice en no visitado, no predecesor y la distancia infinita
+            vertice.setPredecesor(null);
+            vertice.setDistancia(Integer.MAX_VALUE);
+            if (vertice.equals(v)) {
+                
+                vertice.setDistancia(0);
+            }
+            PriorityQueue<Vertice> cola = new PriorityQueue<>((Vertice v1, Vertice v2) -> v1.getDistancia() - v2.getDistancia()); // cola de prioridad para poder obtener siempre el MENOR camino
+            cola.offer(v);
+            while (!cola.isEmpty()) {
+                Vertice analizado = cola.poll();
+                for (Arco a : analizado.getLarcos()) {
+                    if (!analizado.estaVisitado()) {
+                        int nuevoPeso = analizado.getDistancia() + a.getPeso();
+                        if (nuevoPeso < a.getVerticeDestino().getDistancia()) {
+                            a.getVerticeDestino().setDistancia(nuevoPeso);
+                            a.getVerticeDestino().setPredecesor(analizado);
+                            cola.offer(a.getVerticeDestino());
+                        }
+                    }
+                    analizado.setVisitado(true);
+                }
+                
+            }
+            
+        }
+        this.limpiarVertices();
+        
+    }
+   
+    public void imprimirPorDjikstra(){
+        for(Vertice v: this.Lvertices){
+            if(v.getPredecesor()!=null)
+            System.out.println(v.getPredecesor().getContenido()+" -"+v.getDistancia()+" -> "+v.getContenido());
+            else
+                System.out.println("vertice origen"+" -"+v.getDistancia()+" -> "+v.getContenido());
+        }
+    }
